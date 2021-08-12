@@ -1,5 +1,7 @@
 package card
 
+import "github.com/elysiumbridge/gowyre/internal/address"
+
 // Model implements the Card procesing body fields from Card Processing API https://docs.sendwyre.com/reference#white-label-card-processing-api
 // for POST https://api.sendwyre.com/v3/debitcard/process/partner request
 type Model struct {
@@ -17,7 +19,7 @@ type Model struct {
 	Phone             string `json:"phone"`
 	ReferenceId       string `json:"referenceId"`
 
-	Address Address `json:"address"`
+	Address address.Model `json:"address"`
 }
 
 // ProcessResponse is the response from https://api.sendwyre.com/v3/debitcard/process/partner POST request
@@ -44,18 +46,6 @@ type DebitCard struct {
 	Year   string `json:"year"`
 	Month  string `json:"month"`
 	CVV    string `json:"cvv"`
-}
-
-// Address customer related card info
-type Address struct {
-	Street1 string `json:"street1"`
-	City    string `json:"city"`
-	// State state code
-	State string `json:"state"`
-	// PostalCode only numbers
-	PostalCode string `json:"postalCode"`
-	// Country alpha2 country code
-	Country string `json:"country"`
 }
 
 // Authorize body for POST https://api.sendwyre.com/v3/debitcard/authorize/partner request
