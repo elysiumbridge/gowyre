@@ -1,5 +1,7 @@
 package main
 
+import "fmt"
+
 // CreateTransfer implements the create Transfer body fields from Transfer and Exchanges API https://docs.sendwyre.com/reference#create-transfer
 // for POST https://api.sendwyre.com/v3/transfers request
 type CreateTransfer struct {
@@ -54,9 +56,9 @@ type StatusHistory struct {
 	FailedState  *string `json:"failedState"`
 }
 
-// History response body to get transfer history https://docs.sendwyre.com/reference#transfer-history
+// TransfersHistory response body to get transfer history https://docs.sendwyre.com/reference#transfer-history
 // for GET https://api.sendwyre.com/v3/transfers request
-type History struct {
+type TransfersHistory struct {
 	Data []struct {
 		ClosedAt       uint64   `json:"closedAt"`
 		CreatedAt      uint64   `json:"createdAt"`
@@ -82,63 +84,57 @@ type History struct {
 	RecordsFiltered int64 `json:"recordsFiltered"`
 }
 
-// CreateSwap implements the create Swap body fields from Transfer and Exchanges API https://docs.sendwyre.com/reference#create-swap
-// for POST https://api.sendwyre.com/v3/swaps request
-type CreateSwap struct {
-	Dest           string `json:"dest"`
-	SourceCurrency string `json:"sourceCurrency"`
-	DestCurrency   string `json:"destCurrency"`
-	RefundTo       string `json:"refundTo"`
-	NotifyUrl      string `json:"notifyUrl"`
-	IPAddress      string `json:"ipAddress"`
+// CreateTransfer https://docs.sendwyre.com/reference#create-transfer
+func (c *Client) CreateTransfer(transfer *CreateTransfer) (Transfer, error) {
+	req, err := c.newRequest("POST", "/v3/transfers", transfer)
+	if err != nil {
+		return Transfer{}, err
+	}
+	var resp Transfer
+	_, err = c.do(req, &resp)
+	return resp, err
 }
 
-// Swap body returned to Create new swap
-// for POST https://api.sendwyre.com/v3/swaps request
-type Swap struct {
-	ID             string         `json:"id"`
-	Owner          string         `json:"owner"`
-	Status         string         `json:"status"`
-	SourceCurrency string         `json:"sourceCurrency"`
-	DestCurrency   string         `json:"destCurrency"`
-	Dest           string         `json:"dest"`
-	RefundTo       string         `json:"refundTo"`
-	FundingAddress string         `json:"fundingAddress"`
-	CreatedAt      uint64         `json:"createdAt"`
-	UpdatedAt      uint64         `json:"updatedAt"`
-	ExpiresAt      uint64         `json:"expiresAt"`
-	SwapTransfers  []SwapTransfer `json:"swapTransfers"`
+// ConfirmTransfer https://docs.sendwyre.com/reference#confirm-transfer
+func (c *Client) ConfirmTransfer(transferID string) (Transfer, error) {
+	req, err := c.newRequest("POST", fmt.Sprintf("/v3/transfers/%s/confirm", transferID), nil)
+	if err != nil {
+		return Transfer{}, err
+	}
+	var resp Transfer
+	_, err = c.do(req, &resp)
+	return resp, err
 }
 
-// SwapTransfer tranfer part of the swap
-type SwapTransfer struct {
-	ID             string  `json:"id"`
-	SwapID         string  `json:"swapId"`
-	TransferID     string  `json:"transferId"`
-	Type           string  `json:"type"`
-	Reason         *string `json:"reason"`
-	RefundedTo     *string `json:"refundedTo"`
-	CreatedAt      uint64  `json:"createdAt"`
-	Source         string  `json:"source"`
-	Dest           string  `json:"dest"`
-	SourceCurrency string  `json:"sourceCurrency"`
-	DestCurrency   string  `json:"destCurrency"`
-	SourceAmount   float64 `json:"sourceAmount"`
-	DestAmount     float64 `json:"destAmount"`
-	TransferStatus string  `json:"transferStatus"`
-	NetworkTxId    *string `json:"networkTxId"`
+// GetTransfer https://docs.sendwyre.com/reference#get-transfer
+func (c *Client) GetTransfer(transferID string) (Transfer, error) {
+	req, err := c.newRequest("GET", fmt.Sprintf("/v3/transfers/%s", transferID), nil)
+	if err != nil {
+		return Transfer{}, err
+	}
+	var resp Transfer
+	_, err = c.do(req, &resp)
+	return resp, err
 }
 
-// CreateIPValidation implements the IP validation body from Transfer and Exchanges API https://docs.sendwyre.com/reference#swap-ip-validation
-// for POST https://api.sendwyre.com/v3/swaps/ipCheck request
-type CreateIPValidation struct {
-	IPAddress string `json:"ipAddress"`
+// GetTransferByCustomID https://docs.sendwyre.com/reference#get-transfer-by-custom-id
+func (c *Client) GetTransferByCustomID(customID string) (Transfer, error) {
+	req, err := c.newRequest("GET", fmt.Sprintf("/v2/transfers?customId=%s", customID), nil)
+	if err != nil {
+		return Transfer{}, err
+	}
+	var resp Transfer
+	_, err = c.do(req, &resp)
+	return resp, err
 }
 
-// IPValidation body returned to Create IP validation
-// for POST https://api.sendwyre.com/v3/swaps/ipCheck request
-type IPValidation struct {
-	IPAddress           string `json:"ipAddress"`
-	ResolvedCountryCode string `json:"resolvedCountryCode"`
-	Result              string `json:"result"`
+// GetTransfersHistory https://docs.sendwyre.com/reference#transfer-history
+func (c *Client) GetTransfersHistory() (TransfersHistory, error) {
+	req, err := c.newRequest("GET", "/v3/transfers", nil)
+	if err != nil {
+		return TransfersHistory{}, err
+	}
+	var resp TransfersHistory
+	_, err = c.do(req, &resp)
+	return resp, err
 }
