@@ -1,8 +1,8 @@
 package main
 
-// Model implements the Checkout procesing body fields from Wyre Checkout API https://docs.sendwyre.com/reference#wyre-checkout
+// Checkout implements the Checkout procesing body fields from Wyre Checkout API https://docs.sendwyre.com/reference#wyre-checkout
 // for POST https://api.sendwyre.com/v3/orders/reserve request
-type Model struct {
+type Checkout struct {
 	PaymentMethod      string   `json:"paymentMethod"`
 	Amount             string   `json:"amount"`
 	SourceCurrency     string   `json:"sourceCurrency"`

@@ -1,9 +1,11 @@
 package main
 
+import "fmt"
+
 /// Wallets are used to hold cryptocurrency funds on the Wyre platform. White label wallets are spun up on demand via the Create Wallet endpoint.
 
-// Create body for POST https://api.sendwyre.com/v2/wallets request https://docs.sendwyre.com/reference#create-wallet
-type Create struct {
+// CreateWallet body for POST https://api.sendwyre.com/v2/wallets request https://docs.sendwyre.com/reference#create-wallet
+type CreateWallet struct {
 	Name        string `json:"name"`
 	CallbackUrl string `json:"callbackUrl"`
 	Type        string `json:"type"`
@@ -66,11 +68,11 @@ type AvailableBalances struct {
 
 // CreateMulti body for POST https://api.sendwyre.com/v2/wallets/batch request https://docs.sendwyre.com/reference#create-multiple-wallets
 type CreateMulti struct {
-	Wallets []Create `json:"wallets"`
+	Wallets []CreateWallet `json:"wallets"`
 }
 
-// Update body for POST https://api.sendwyre.com/v2/wallet/:walletId/update request https://docs.sendwyre.com/reference#update-wallet
-type Update struct {
+// UpdatePayload body for POST https://api.sendwyre.com/v2/wallet/:walletId/update request https://docs.sendwyre.com/reference#update-wallet
+type UpdatePayload struct {
 	WalletID    string `json:"walletId"`
 	Name        string `json:"name"`
 	CallbackURL string `json:"callbackUrl"`
@@ -79,5 +81,71 @@ type Update struct {
 
 // ListResponse body for GET https://api.sendwyre.com/v2/wallets request
 type ListResponse struct {
-	Data []Model `json:"data"`
+	Data []Wallet `json:"data"`
+}
+
+// CreateWallet https://docs.sendwyre.com/reference#create-wallet
+func (c *Client) CreateWallet(wallet *CreateWallet) (Wallet, error) {
+	req, err := c.newRequest("POST", "/v2/wallets", wallet)
+	if err != nil {
+		return Wallet{}, err
+	}
+	var resp Wallet
+	_, err = c.do(req, &resp)
+	return resp, err
+}
+
+// CreateMultipleWallet https://docs.sendwyre.com/reference#create-multiple-wallets
+func (c *Client) CreateMultipleWallet(wallets *CreateMulti) (ListResponse, error) {
+	req, err := c.newRequest("POST", "/v2/wallets/batch", wallets)
+	if err != nil {
+		return ListResponse{}, err
+	}
+	var resp ListResponse
+	_, err = c.do(req, &resp)
+	return resp, err
+}
+
+// LookupWallet https://docs.sendwyre.com/reference#lookup-wallet
+func (c *Client) LookupWallet(walletID string) (Wallet, error) {
+	req, err := c.newRequest("GET", fmt.Sprintf("/v2/wallet/%s", walletID), nil)
+	if err != nil {
+		return Wallet{}, err
+	}
+	var resp Wallet
+	_, err = c.do(req, &resp)
+	return resp, err
+}
+
+// UpdateWallet https://docs.sendwyre.com/reference#update-wallet
+func (c *Client) UpdateWallet(payload *UpdatePayload) error {
+	req, err := c.newRequest("POST", fmt.Sprintf("/v2/wallet/%s/update", payload.WalletID), payload)
+	if err != nil {
+		return err
+	}
+	var resp ListResponse
+	_, err = c.do(req, &resp)
+	return err
+}
+
+// DeleteWallet https://docs.sendwyre.com/reference#delete-wallet
+func (c *Client) DeleteWallet(walletId string) error {
+	req, err := c.newRequest("DELETE", fmt.Sprintf("/v2/wallet/%s", walletId), nil)
+	if err != nil {
+		return err
+	}
+	var resp ListResponse
+	_, err = c.do(req, &resp)
+	return err
+}
+
+// ListAllWallets https://docs.sendwyre.com/reference#list-all-wallets
+func (c *Client) ListAllWallets() (ListResponse, error) {
+	req, err := c.newRequest("GET", "/v2/wallets", nil)
+	if err != nil {
+		return ListResponse{}, err
+	}
+	var resp ListResponse
+	_, err = c.do(req, &resp)
+	return resp, err
 }
