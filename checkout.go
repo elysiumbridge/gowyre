@@ -1,5 +1,7 @@
 package main
 
+import "fmt"
+
 // Checkout implements the Checkout procesing body fields from Wyre Checkout API https://docs.sendwyre.com/reference#wyre-checkout
 // for POST https://api.sendwyre.com/v3/orders/reserve request
 type Checkout struct {
@@ -17,16 +19,6 @@ type Checkout struct {
 type ReservationResponse struct {
 	URL         string `json:"url"`
 	Reservation string `json:"reservation"`
-}
-
-// LimitsRequest implements the Checkout procesing body fields from Limits API https://docs.sendwyre.com/reference#wyre-checkout
-// for POST https://api.sendwyre.com/v3/widgets/limits/calculate request
-type LimitsRequest struct {
-	WalletType     string `json:"walletType"`
-	AccountID      string `json:"accountId"`
-	SourceCurrency string `json:"sourceCurrency"` // accepts USD, EUR, CAD, GBP and AUD
-
-	Address Address `json:"address"`
 }
 
 // QuotationRequest implements the Quotation procesing body fields from Wyre Checkout API https://docs.sendwyre.com/reference#wallet-order-quotation
@@ -64,19 +56,6 @@ type Equivalencies struct {
 	WETH float64 `json:"WETH"`
 	USD  float64 `json:"USD"`
 	MXN  float64 `json:"MXN"`
-}
-
-// Limits body for limits request listing user limits
-type Limits struct {
-	DailyTotalSpent  float64 `json:"dailyTotalSpent"`
-	WeeklyTotalSpent float64 `json:"weeklyTotalSpent"`
-	YearlyTotalSpent float64 `json:"yearlyTotalSpent"`
-	DailyTotal       float64 `json:"dailyTotal"`
-	WeeklyTotal      float64 `json:"weeklyTotal"`
-	YearlyTotal      float64 `json:"yearlyTotal"`
-	DailyRemaining   float64 `json:"dailyRemaining"`
-	WeeklyRemaining  float64 `json:"weeklyRemaining"`
-	YearlyRemaining  float64 `json:"yearlyRemaining"`
 }
 
 // OrderDetail body response to GET https://api.sendwyre.com/v3/orders/orderId request
@@ -212,4 +191,81 @@ type Quote struct {
 	ExchangeRate            float64       `json:"exchangeRate"`
 	Equivalencies           Equivalencies `json:"equivalencies"`
 	Fees                    Fee           `json:"fees"`
+}
+
+// CreateWalletOrderReservation https://docs.sendwyre.com/reference#wallet-order-reservations
+func (c *Client) CreateWalletOrderReservation(payload *Checkout) (ReservationResponse, error) {
+	req, err := c.newRequest("POST", "/v3/orders/reserve", payload)
+	if err != nil {
+		return ReservationResponse{}, err
+	}
+	var resp ReservationResponse
+	_, err = c.do(req, &resp)
+	return resp, err
+}
+
+// CreateWalletOrderQuotation https://docs.sendwyre.com/reference#wallet-order-details
+func (c *Client) CreateWalletOrderQuotation(payload *QuotationRequest) (Quotation, error) {
+	req, err := c.newRequest("POST", "/v3/orders/quote/partner", payload)
+	if err != nil {
+		return Quotation{}, err
+	}
+	var resp Quotation
+	_, err = c.do(req, &resp)
+	return resp, err
+}
+
+// GetWalletOrderFull https://docs.sendwyre.com/reference#wallet-order-full
+func (c *Client) GetWalletOrderFull(orderId string) (OrderFullDetail, error) {
+	req, err := c.newRequest("GET", fmt.Sprintf("/v3/orders/%s/full", orderId), nil)
+	if err != nil {
+		return OrderFullDetail{}, err
+	}
+	var resp OrderFullDetail
+	_, err = c.do(req, &resp)
+	return resp, err
+}
+
+// GetWalletOrdersList https://docs.sendwyre.com/reference#list-orders-paged
+func (c *Client) GetWalletOrdersList() (OrdersList, error) {
+	req, err := c.newRequest("GET", "/v3/orders/list", nil)
+	if err != nil {
+		return OrdersList{}, err
+	}
+	var resp OrdersList
+	_, err = c.do(req, &resp)
+	return resp, err
+}
+
+// GetTrackWidgetOrder https://docs.sendwyre.com/reference#track-wallet-order
+func (c *Client) GetTrackWidgetOrder(transferId string) (TrackWidgetOrder, error) {
+	req, err := c.newRequest("GET", fmt.Sprintf("/v2/transfer/%s/track", transferId), nil)
+	if err != nil {
+		return TrackWidgetOrder{}, err
+	}
+	var resp TrackWidgetOrder
+	_, err = c.do(req, &resp)
+	return resp, err
+}
+
+// GetSupportedCountries https://docs.sendwyre.com/reference#list-orders-paged
+func (c *Client) GetSupportedCountries() (SupportedCountries, error) {
+	req, err := c.newRequest("GET", "/v3/widget/supportedCountries", nil)
+	if err != nil {
+		return SupportedCountries{}, err
+	}
+	var resp SupportedCountries
+	_, err = c.do(req, &resp)
+	return resp, err
+}
+
+// GetRateLockedReservation https://docs.sendwyre.com/reference#rate-locked-reservation
+func (c *Client) GetRateLockedReservation(reservationId string) (RateLockedReservation, error) {
+	req, err := c.newRequest("GET", fmt.Sprintf("/v3/orders/reservation/%s", reservationId), nil)
+	if err != nil {
+		return RateLockedReservation{}, err
+	}
+	var resp RateLockedReservation
+	_, err = c.do(req, &resp)
+	return resp, err
 }
