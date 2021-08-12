@@ -1,6 +1,9 @@
 package checkout
 
-import "github.com/elysiumbridge/gowyre/internal/address"
+import (
+	"github.com/elysiumbridge/gowyre/internal/address"
+	"github.com/elysiumbridge/gowyre/internal/fee"
+)
 
 // Model implements the Checkout procesing body fields from Wyre Checkout API https://docs.sendwyre.com/reference#wyre-checkout
 // for POST https://api.sendwyre.com/v3/orders/reserve request
@@ -50,7 +53,7 @@ type Quotation struct {
 	DestAmount     float64       `json:"destAmount"`
 	ExchangeRate   float64       `json:"exchangeRate"`
 	Equivalencies  Equivalencies `json:"equivalencies"`
-	Fees           Fees          `json:"fees"`
+	Fees           fee.Model     `json:"fees"`
 }
 
 // Equivalencies list of currency quotation pairs
@@ -66,12 +69,6 @@ type Equivalencies struct {
 	WETH float64 `json:"WETH"`
 	USD  float64 `json:"USD"`
 	MXN  float64 `json:"MXN"`
-}
-
-// Fees list of currency based fees
-type Fees struct {
-	ETH float64 `json:"ETH"`
-	USD float64 `json:"USD"`
 }
 
 // Limits body for limits request listing user limits
@@ -142,7 +139,7 @@ type TrackWidgetOrder struct {
 	TransferId               string          `json:"transferId"`
 	FeeCurrency              string          `json:"feeCurrency"`
 	Fee                      float64         `json:"fee"`
-	Fees                     Fees            `json:"fees"`
+	Fees                     fee.Model       `json:"fees"`
 	SourceCurrency           string          `json:"sourceCurrency"`
 	DestCurrency             string          `json:"destCurrency"`
 	SourceAmount             float64         `json:"sourceAmount"`
@@ -219,5 +216,5 @@ type Quote struct {
 	DestAmount              float64       `json:"destAmount"`
 	ExchangeRate            float64       `json:"exchangeRate"`
 	Equivalencies           Equivalencies `json:"equivalencies"`
-	Fees                    Fees          `json:"fees"`
+	Fees                    fee.Model     `json:"fees"`
 }
