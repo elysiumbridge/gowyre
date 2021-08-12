@@ -1,13 +1,8 @@
-package transfer
+package main
 
-import (
-	"github.com/elysiumbridge/gowyre/internal/fee"
-	"github.com/elysiumbridge/gowyre/internal/tx"
-)
-
-// Create implements the create Transfer body fields from Transfer and Exchanges API https://docs.sendwyre.com/reference#create-transfer
+// CreateTransfer implements the create Transfer body fields from Transfer and Exchanges API https://docs.sendwyre.com/reference#create-transfer
 // for POST https://api.sendwyre.com/v3/transfers request
-type Create struct {
+type CreateTransfer struct {
 	Source         string  `json:"source"`
 	SourceCurrency string  `json:"sourceCurrency"`
 	SourceAmount   float64 `json:"sourceAmount"`
@@ -19,7 +14,7 @@ type Create struct {
 
 // Model transfer body returned to Create new transfer
 // for POST https://api.sendwyre.com/v3/transfers request
-type Model struct {
+type Transfer struct {
 	Owner              string          `json:"owner"`
 	Source             string          `json:"source"`
 	SourceAmount       float64         `json:"sourceAmount"`
@@ -35,9 +30,9 @@ type Model struct {
 	Status             string          `json:"status"`
 	ExchangeRate       *float64        `json:"exchangeRate"`
 	DestAmount         float64         `json:"destAmount"`
-	Fees               fee.Model       `json:"fees"`
+	Fees               Fee             `json:"fees"`
 	TotalFees          float64         `json:"totalFees"`
-	BlockchainTx       tx.Model        `json:"blockchainTx"`
+	BlockchainTx       Tx              `json:"blockchainTx"`
 	ReversalReason     *string         `json:"reversalReason"`
 	ReversingSubStatus *string         `json:"reversingSubStatus"`
 	Dest               string          `json:"dest"`
@@ -63,24 +58,24 @@ type StatusHistory struct {
 // for GET https://api.sendwyre.com/v3/transfers request
 type History struct {
 	Data []struct {
-		ClosedAt       uint64    `json:"closedAt"`
-		CreatedAt      uint64    `json:"createdAt"`
-		ID             string    `json:"id"`
-		CustomID       *string   `json:"customId"`
-		Source         string    `json:"source"`
-		Dest           string    `json:"dest"`
-		SourceCurrency string    `json:"sourceCurrency"`
-		DestCurrency   string    `json:"destCurrency"`
-		SourceAmount   string    `json:"sourceAmount"`
-		DestAmount     float64   `json:"destAmount"`
-		Fees           fee.Model `json:"fees"`
-		SourceName     string    `json:"sourceName"`
-		DestName       string    `json:"destName"`
-		Status         string    `json:"status"`
-		Message        *string   `json:"message"`
-		ExchangeRate   *float64  `json:"exchangeRate"`
-		BlockchainTx   tx.Model  `json:"blockchainTx"`
-		DestNickname   string    `json:"destNickname"`
+		ClosedAt       uint64   `json:"closedAt"`
+		CreatedAt      uint64   `json:"createdAt"`
+		ID             string   `json:"id"`
+		CustomID       *string  `json:"customId"`
+		Source         string   `json:"source"`
+		Dest           string   `json:"dest"`
+		SourceCurrency string   `json:"sourceCurrency"`
+		DestCurrency   string   `json:"destCurrency"`
+		SourceAmount   string   `json:"sourceAmount"`
+		DestAmount     float64  `json:"destAmount"`
+		Fees           Fee      `json:"fees"`
+		SourceName     string   `json:"sourceName"`
+		DestName       string   `json:"destName"`
+		Status         string   `json:"status"`
+		Message        *string  `json:"message"`
+		ExchangeRate   *float64 `json:"exchangeRate"`
+		BlockchainTx   Tx       `json:"blockchainTx"`
+		DestNickname   string   `json:"destNickname"`
 	} `json:"data"`
 	Position        int64 `json:"position"`
 	RecordsTotal    int64 `json:"recordsTotal"`

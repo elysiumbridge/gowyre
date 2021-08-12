@@ -1,7 +1,7 @@
-package tx
+package main
 
-// Model represent a blockchain transaction object
-type Model struct {
+// Tx represent a blockchain transaction object
+type Tx struct {
 	ID            string  `json:"id"`
 	NetworkTxID   string  `json:"networkTxId"`
 	CreatedAt     uint64  `json:"createdAt"`

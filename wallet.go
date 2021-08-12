@@ -1,4 +1,4 @@
-package wallet
+package main
 
 /// Wallets are used to hold cryptocurrency funds on the Wyre platform. White label wallets are spun up on demand via the Create Wallet endpoint.
 
@@ -10,8 +10,8 @@ type Create struct {
 	Notes       string `json:"notes"`
 }
 
-// Model response for POST https://api.sendwyre.com/v2/wallets request
-type Model struct {
+// Wallet response for POST https://api.sendwyre.com/v2/wallets request
+type Wallet struct {
 	Owner             string            `json:"owner"`
 	Status            string            `json:"status"`
 	CallbackUrl       string            `json:"callbackUrl"`

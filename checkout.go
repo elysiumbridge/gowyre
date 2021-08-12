@@ -1,9 +1,4 @@
-package checkout
-
-import (
-	"github.com/elysiumbridge/gowyre/internal/address"
-	"github.com/elysiumbridge/gowyre/internal/fee"
-)
+package main
 
 // Model implements the Checkout procesing body fields from Wyre Checkout API https://docs.sendwyre.com/reference#wyre-checkout
 // for POST https://api.sendwyre.com/v3/orders/reserve request
@@ -31,7 +26,7 @@ type LimitsRequest struct {
 	AccountID      string `json:"accountId"`
 	SourceCurrency string `json:"sourceCurrency"` // accepts USD, EUR, CAD, GBP and AUD
 
-	Address address.Model `json:"address"`
+	Address Address `json:"address"`
 }
 
 // QuotationRequest implements the Quotation procesing body fields from Wyre Checkout API https://docs.sendwyre.com/reference#wallet-order-quotation
@@ -53,7 +48,7 @@ type Quotation struct {
 	DestAmount     float64       `json:"destAmount"`
 	ExchangeRate   float64       `json:"exchangeRate"`
 	Equivalencies  Equivalencies `json:"equivalencies"`
-	Fees           fee.Model     `json:"fees"`
+	Fees           Fee           `json:"fees"`
 }
 
 // Equivalencies list of currency quotation pairs
@@ -139,7 +134,7 @@ type TrackWidgetOrder struct {
 	TransferId               string          `json:"transferId"`
 	FeeCurrency              string          `json:"feeCurrency"`
 	Fee                      float64         `json:"fee"`
-	Fees                     fee.Model       `json:"fees"`
+	Fees                     Fee             `json:"fees"`
 	SourceCurrency           string          `json:"sourceCurrency"`
 	DestCurrency             string          `json:"destCurrency"`
 	SourceAmount             float64         `json:"sourceAmount"`
@@ -190,7 +185,7 @@ type RateLockedReservation struct {
 	DestAmount        float64  `json:"destAmount"`
 	AmountIncludeFees bool     `json:"amountIncludeFees"`
 
-	address.Model
+	Address
 
 	FirstName          string   `json:"firstName"`
 	LastName           string   `json:"lastName"`
@@ -216,5 +211,5 @@ type Quote struct {
 	DestAmount              float64       `json:"destAmount"`
 	ExchangeRate            float64       `json:"exchangeRate"`
 	Equivalencies           Equivalencies `json:"equivalencies"`
-	Fees                    fee.Model     `json:"fees"`
+	Fees                    Fee           `json:"fees"`
 }

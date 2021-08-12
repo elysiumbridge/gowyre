@@ -1,7 +1,7 @@
-package address
+package main
 
-// Model customer address related card info
-type Model struct {
+// Address customer address related card info
+type Address struct {
 	Street1 string `json:"street1"`
 	City    string `json:"city"`
 	// State state code

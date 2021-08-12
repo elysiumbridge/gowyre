@@ -1,10 +1,8 @@
-package card
+package main
 
-import "github.com/elysiumbridge/gowyre/internal/address"
-
-// Model implements the Card procesing body fields from Card Processing API https://docs.sendwyre.com/reference#white-label-card-processing-api
+// Card implements the Card procesing body fields from Card Processing API https://docs.sendwyre.com/reference#white-label-card-processing-api
 // for POST https://api.sendwyre.com/v3/debitcard/process/partner request
-type Model struct {
+type Card struct {
 	DebitCard DebitCard `json:"debitCard"`
 
 	ReservationID     string `json:"reservationId"`
@@ -19,7 +17,7 @@ type Model struct {
 	Phone             string `json:"phone"`
 	ReferenceId       string `json:"referenceId"`
 
-	Address address.Model `json:"address"`
+	Address Address `json:"address"`
 }
 
 // ProcessResponse is the response from https://api.sendwyre.com/v3/debitcard/process/partner POST request
