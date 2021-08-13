@@ -1,4 +1,4 @@
-package main
+package gowyre
 
 // CreateIPValidation implements the IP validation body from Transfer and Exchanges API https://docs.sendwyre.com/reference#swap-ip-validation
 // for POST https://api.sendwyre.com/v3/swaps/ipCheck request

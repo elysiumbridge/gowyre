@@ -1,4 +1,4 @@
-package main
+package gowyre
 
 // LimitsRequest implements the Checkout procesing body fields from Limits API https://docs.sendwyre.com/reference#wyre-checkout
 // for POST https://api.sendwyre.com/v3/widgets/limits/calculate request

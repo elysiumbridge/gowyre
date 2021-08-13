@@ -1,4 +1,4 @@
-package main
+package gowyre
 
 // Tx represent a blockchain transaction object
 type Tx struct {

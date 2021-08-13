@@ -1,4 +1,4 @@
-package main
+package gowyre
 
 // Address customer address related card info
 type Address struct {

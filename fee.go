@@ -1,4 +1,4 @@
-package main
+package gowyre
 
 // Fee list of currency based fees
 type Fee struct {
