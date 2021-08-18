@@ -2,10 +2,15 @@ package gowyre
 
 import (
 	"context"
+	"errors"
 	"fmt"
 )
 
 /// Wallets are used to hold cryptocurrency funds on the Wyre platform. White label wallets are spun up on demand via the Create Wallet endpoint.
+
+var (
+	ErrMissingWalletID = errors.New("No wallet identifier provided")
+)
 
 // CreateWallet body for POST https://api.sendwyre.com/v2/wallets request https://docs.sendwyre.com/reference#create-wallet
 type CreateWallet struct {
@@ -89,6 +94,10 @@ type ListResponse struct {
 
 // CreateWallet https://docs.sendwyre.com/reference#create-wallet
 func (c *Client) CreateWallet(ctx context.Context, wallet *CreateWallet) (Wallet, error) {
+	if wallet.Type == "" {
+		wallet.Type = "DEFAULT"
+	}
+
 	req, err := c.newRequest(ctx, "POST", "/v2/wallets", wallet)
 	if err != nil {
 		return Wallet{}, err
@@ -110,8 +119,27 @@ func (c *Client) CreateMultipleWallet(ctx context.Context, wallets *CreateMulti)
 }
 
 // LookupWallet https://docs.sendwyre.com/reference#lookup-wallet
-func (c *Client) LookupWallet(ctx context.Context, walletID string) (Wallet, error) {
-	req, err := c.newRequest(ctx, "GET", fmt.Sprintf("/v2/wallet/%s", walletID), nil)
+// The method receives both a walletID and name parameters. If one is specified the
+// wallet will be retrieved accordingly. The walletID is used if both values are provided
+func (c *Client) LookupWallet(ctx context.Context, walletID, name string) (Wallet, error) {
+	if walletID == "" && name == "" {
+		return Wallet{}, ErrMissingWalletID
+	}
+
+	url := "/v2/wallet"
+	if walletID != "" {
+		url = fmt.Sprintf("%s/%s", url, walletID)
+	}
+	body := &struct {
+		Name string `json:"name"`
+	}{
+		Name: name,
+	}
+	if walletID != "" {
+		body = nil
+	}
+
+	req, err := c.newRequest(ctx, "GET", url, body)
 	if err != nil {
 		return Wallet{}, err
 	}
