@@ -4,9 +4,19 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"errors"
 	"io"
 	"net/http"
 	"net/url"
+)
+
+const (
+	testWyreURL = "https://api.testwyre.com"
+	sendWyreURL = "https://api.sendwyre.com"
+)
+
+var (
+	ErrAccessDenied = errors.New("AccessDeniedException")
 )
 
 type Client struct {
@@ -17,14 +27,19 @@ type Client struct {
 	httpClient *http.Client
 }
 
-func NewClient(secret, baseURL, agent string, httpClient *http.Client) (*Client, error) {
+func NewClient(secret, env, agent string, httpClient *http.Client) (c *Client, err error) {
 	if httpClient == nil {
 		httpClient = http.DefaultClient
 	}
 
-	URL, err := url.Parse(baseURL)
+	var URL *url.URL
+	if env == "test" {
+		URL, err = url.Parse(testWyreURL)
+	} else {
+		URL, err = url.Parse(sendWyreURL)
+	}
 	if err != nil {
-		return nil, err
+		return
 	}
 
 	userAgent := "gowyre"
@@ -32,7 +47,8 @@ func NewClient(secret, baseURL, agent string, httpClient *http.Client) (*Client,
 		userAgent = agent
 	}
 
-	return &Client{secret, URL, userAgent, httpClient}, nil
+	c = &Client{secret, URL, userAgent, httpClient}
+	return
 }
 
 func (c *Client) newRequest(ctx context.Context, method, path string, body interface{}) (*http.Request, error) {
@@ -65,6 +81,9 @@ func (c *Client) do(req *http.Request, v interface{}) (*http.Response, error) {
 		return nil, err
 	}
 	defer resp.Body.Close()
+	if resp.StatusCode == 401 {
+		return nil, ErrAccessDenied
+	}
 	err = json.NewDecoder(resp.Body).Decode(v)
 	return resp, err
 }
