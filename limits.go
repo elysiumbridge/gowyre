@@ -1,5 +1,7 @@
 package gowyre
 
+import "context"
+
 // LimitsRequest implements the Checkout procesing body fields from Limits API https://docs.sendwyre.com/reference#wyre-checkout
 // for POST https://api.sendwyre.com/v3/widgets/limits/calculate request
 type LimitsRequest struct {
@@ -24,8 +26,8 @@ type Limits struct {
 }
 
 // CalculateLimits https://docs.sendwyre.com/reference#limits-api
-func (c *Client) CalculateLimits(limits *LimitsRequest) (Limits, error) {
-	req, err := c.newRequest("POST", "/v3/widget/limits/calculate", limits)
+func (c *Client) CalculateLimits(ctx context.Context, limits *LimitsRequest) (Limits, error) {
+	req, err := c.newRequest(ctx, "POST", "/v3/widget/limits/calculate", limits)
 	if err != nil {
 		return Limits{}, err
 	}

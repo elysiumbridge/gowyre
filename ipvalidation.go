@@ -1,5 +1,7 @@
 package gowyre
 
+import "context"
+
 // CreateIPValidation implements the IP validation body from Transfer and Exchanges API https://docs.sendwyre.com/reference#swap-ip-validation
 // for POST https://api.sendwyre.com/v3/swaps/ipCheck request
 type CreateIPValidation struct {
@@ -15,8 +17,8 @@ type IPValidation struct {
 }
 
 // SwapIPValidation https://docs.sendwyre.com/reference#swap-ip-validation
-func (c *Client) SwapIPValidation(IPAddress string) (IPValidation, error) {
-	req, err := c.newRequest("POST", "/v3/swaps/ipCheck", &CreateIPValidation{IPAddress})
+func (c *Client) SwapIPValidation(ctx context.Context, IPAddress string) (IPValidation, error) {
+	req, err := c.newRequest(ctx, "POST", "/v3/swaps/ipCheck", &CreateIPValidation{IPAddress})
 	if err != nil {
 		return IPValidation{}, err
 	}

@@ -1,6 +1,9 @@
 package gowyre
 
-import "fmt"
+import (
+	"context"
+	"fmt"
+)
 
 // CreateTransfer implements the create Transfer body fields from Transfer and Exchanges API https://docs.sendwyre.com/reference#create-transfer
 // for POST https://api.sendwyre.com/v3/transfers request
@@ -85,8 +88,8 @@ type TransfersHistory struct {
 }
 
 // CreateTransfer https://docs.sendwyre.com/reference#create-transfer
-func (c *Client) CreateTransfer(transfer *CreateTransfer) (Transfer, error) {
-	req, err := c.newRequest("POST", "/v3/transfers", transfer)
+func (c *Client) CreateTransfer(ctx context.Context, transfer *CreateTransfer) (Transfer, error) {
+	req, err := c.newRequest(ctx, "POST", "/v3/transfers", transfer)
 	if err != nil {
 		return Transfer{}, err
 	}
@@ -96,8 +99,8 @@ func (c *Client) CreateTransfer(transfer *CreateTransfer) (Transfer, error) {
 }
 
 // ConfirmTransfer https://docs.sendwyre.com/reference#confirm-transfer
-func (c *Client) ConfirmTransfer(transferID string) (Transfer, error) {
-	req, err := c.newRequest("POST", fmt.Sprintf("/v3/transfers/%s/confirm", transferID), nil)
+func (c *Client) ConfirmTransfer(ctx context.Context, transferID string) (Transfer, error) {
+	req, err := c.newRequest(ctx, "POST", fmt.Sprintf("/v3/transfers/%s/confirm", transferID), nil)
 	if err != nil {
 		return Transfer{}, err
 	}
@@ -107,8 +110,8 @@ func (c *Client) ConfirmTransfer(transferID string) (Transfer, error) {
 }
 
 // GetTransfer https://docs.sendwyre.com/reference#get-transfer
-func (c *Client) GetTransfer(transferID string) (Transfer, error) {
-	req, err := c.newRequest("GET", fmt.Sprintf("/v3/transfers/%s", transferID), nil)
+func (c *Client) GetTransfer(ctx context.Context, transferID string) (Transfer, error) {
+	req, err := c.newRequest(ctx, "GET", fmt.Sprintf("/v3/transfers/%s", transferID), nil)
 	if err != nil {
 		return Transfer{}, err
 	}
@@ -118,8 +121,8 @@ func (c *Client) GetTransfer(transferID string) (Transfer, error) {
 }
 
 // GetTransferByCustomID https://docs.sendwyre.com/reference#get-transfer-by-custom-id
-func (c *Client) GetTransferByCustomID(customID string) (Transfer, error) {
-	req, err := c.newRequest("GET", fmt.Sprintf("/v2/transfers?customId=%s", customID), nil)
+func (c *Client) GetTransferByCustomID(ctx context.Context, customID string) (Transfer, error) {
+	req, err := c.newRequest(ctx, "GET", fmt.Sprintf("/v2/transfers?customId=%s", customID), nil)
 	if err != nil {
 		return Transfer{}, err
 	}
@@ -129,8 +132,8 @@ func (c *Client) GetTransferByCustomID(customID string) (Transfer, error) {
 }
 
 // GetTransfersHistory https://docs.sendwyre.com/reference#transfer-history
-func (c *Client) GetTransfersHistory() (TransfersHistory, error) {
-	req, err := c.newRequest("GET", "/v3/transfers", nil)
+func (c *Client) GetTransfersHistory(ctx context.Context) (TransfersHistory, error) {
+	req, err := c.newRequest(ctx, "GET", "/v3/transfers", nil)
 	if err != nil {
 		return TransfersHistory{}, err
 	}

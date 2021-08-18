@@ -2,6 +2,7 @@ package gowyre
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"io"
 	"net/http"
@@ -34,7 +35,7 @@ func NewClient(secret, baseURL, agent string, httpClient *http.Client) (*Client,
 	return &Client{secret, URL, userAgent, httpClient}, nil
 }
 
-func (c *Client) newRequest(method, path string, body interface{}) (*http.Request, error) {
+func (c *Client) newRequest(ctx context.Context, method, path string, body interface{}) (*http.Request, error) {
 	rel := &url.URL{Path: path}
 	u := c.BaseURL.ResolveReference(rel)
 	var buf io.ReadWriter
@@ -49,6 +50,7 @@ func (c *Client) newRequest(method, path string, body interface{}) (*http.Reques
 	if err != nil {
 		return nil, err
 	}
+	req = req.WithContext(ctx)
 	if body != nil {
 		req.Header.Set("Content-Type", "application/json")
 	}

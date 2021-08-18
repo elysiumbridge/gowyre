@@ -1,6 +1,9 @@
 package gowyre
 
-import "fmt"
+import (
+	"context"
+	"fmt"
+)
 
 /// Wallets are used to hold cryptocurrency funds on the Wyre platform. White label wallets are spun up on demand via the Create Wallet endpoint.
 
@@ -85,8 +88,8 @@ type ListResponse struct {
 }
 
 // CreateWallet https://docs.sendwyre.com/reference#create-wallet
-func (c *Client) CreateWallet(wallet *CreateWallet) (Wallet, error) {
-	req, err := c.newRequest("POST", "/v2/wallets", wallet)
+func (c *Client) CreateWallet(ctx context.Context, wallet *CreateWallet) (Wallet, error) {
+	req, err := c.newRequest(ctx, "POST", "/v2/wallets", wallet)
 	if err != nil {
 		return Wallet{}, err
 	}
@@ -96,8 +99,8 @@ func (c *Client) CreateWallet(wallet *CreateWallet) (Wallet, error) {
 }
 
 // CreateMultipleWallet https://docs.sendwyre.com/reference#create-multiple-wallets
-func (c *Client) CreateMultipleWallet(wallets *CreateMulti) (ListResponse, error) {
-	req, err := c.newRequest("POST", "/v2/wallets/batch", wallets)
+func (c *Client) CreateMultipleWallet(ctx context.Context, wallets *CreateMulti) (ListResponse, error) {
+	req, err := c.newRequest(ctx, "POST", "/v2/wallets/batch", wallets)
 	if err != nil {
 		return ListResponse{}, err
 	}
@@ -107,8 +110,8 @@ func (c *Client) CreateMultipleWallet(wallets *CreateMulti) (ListResponse, error
 }
 
 // LookupWallet https://docs.sendwyre.com/reference#lookup-wallet
-func (c *Client) LookupWallet(walletID string) (Wallet, error) {
-	req, err := c.newRequest("GET", fmt.Sprintf("/v2/wallet/%s", walletID), nil)
+func (c *Client) LookupWallet(ctx context.Context, walletID string) (Wallet, error) {
+	req, err := c.newRequest(ctx, "GET", fmt.Sprintf("/v2/wallet/%s", walletID), nil)
 	if err != nil {
 		return Wallet{}, err
 	}
@@ -118,8 +121,8 @@ func (c *Client) LookupWallet(walletID string) (Wallet, error) {
 }
 
 // UpdateWallet https://docs.sendwyre.com/reference#update-wallet
-func (c *Client) UpdateWallet(payload *UpdatePayload) error {
-	req, err := c.newRequest("POST", fmt.Sprintf("/v2/wallet/%s/update", payload.WalletID), payload)
+func (c *Client) UpdateWallet(ctx context.Context, payload *UpdatePayload) error {
+	req, err := c.newRequest(ctx, "POST", fmt.Sprintf("/v2/wallet/%s/update", payload.WalletID), payload)
 	if err != nil {
 		return err
 	}
@@ -129,8 +132,8 @@ func (c *Client) UpdateWallet(payload *UpdatePayload) error {
 }
 
 // DeleteWallet https://docs.sendwyre.com/reference#delete-wallet
-func (c *Client) DeleteWallet(walletId string) error {
-	req, err := c.newRequest("DELETE", fmt.Sprintf("/v2/wallet/%s", walletId), nil)
+func (c *Client) DeleteWallet(ctx context.Context, walletId string) error {
+	req, err := c.newRequest(ctx, "DELETE", fmt.Sprintf("/v2/wallet/%s", walletId), nil)
 	if err != nil {
 		return err
 	}
@@ -140,8 +143,8 @@ func (c *Client) DeleteWallet(walletId string) error {
 }
 
 // ListAllWallets https://docs.sendwyre.com/reference#list-all-wallets
-func (c *Client) ListAllWallets() (ListResponse, error) {
-	req, err := c.newRequest("GET", "/v2/wallets", nil)
+func (c *Client) ListAllWallets(ctx context.Context) (ListResponse, error) {
+	req, err := c.newRequest(ctx, "GET", "/v2/wallets", nil)
 	if err != nil {
 		return ListResponse{}, err
 	}

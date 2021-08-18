@@ -1,6 +1,7 @@
 package gowyre
 
 import (
+	"context"
 	"errors"
 	"fmt"
 )
@@ -12,7 +13,7 @@ const (
 var ErrUnsupportedRate = errors.New("the provided exchange rate type is not supported")
 
 // GetExchangeRates https://docs.sendwyre.com/reference#live-exchange-rates
-func (c *Client) GetExchangeRates(as string) (interface{}, error) {
+func (c *Client) GetExchangeRates(ctx context.Context, as string) (interface{}, error) {
 	if as == "" {
 		as = DefaultRate
 	}
@@ -20,7 +21,7 @@ func (c *Client) GetExchangeRates(as string) (interface{}, error) {
 		return nil, ErrUnsupportedRate
 	}
 
-	req, err := c.newRequest("GET", fmt.Sprintf("/v3/rates?as=%s", as), nil)
+	req, err := c.newRequest(ctx, "GET", fmt.Sprintf("/v3/rates?as=%s", as), nil)
 	if err != nil {
 		return nil, err
 	}

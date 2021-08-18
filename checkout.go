@@ -1,6 +1,9 @@
 package gowyre
 
-import "fmt"
+import (
+	"context"
+	"fmt"
+)
 
 // Checkout implements the Checkout procesing body fields from Wyre Checkout API https://docs.sendwyre.com/reference#wyre-checkout
 // for POST https://api.sendwyre.com/v3/orders/reserve request
@@ -194,8 +197,8 @@ type Quote struct {
 }
 
 // CreateWalletOrderReservation https://docs.sendwyre.com/reference#wallet-order-reservations
-func (c *Client) CreateWalletOrderReservation(payload *Checkout) (ReservationResponse, error) {
-	req, err := c.newRequest("POST", "/v3/orders/reserve", payload)
+func (c *Client) CreateWalletOrderReservation(ctx context.Context, payload *Checkout) (ReservationResponse, error) {
+	req, err := c.newRequest(ctx, "POST", "/v3/orders/reserve", payload)
 	if err != nil {
 		return ReservationResponse{}, err
 	}
@@ -205,8 +208,8 @@ func (c *Client) CreateWalletOrderReservation(payload *Checkout) (ReservationRes
 }
 
 // CreateWalletOrderQuotation https://docs.sendwyre.com/reference#wallet-order-details
-func (c *Client) CreateWalletOrderQuotation(payload *QuotationRequest) (Quotation, error) {
-	req, err := c.newRequest("POST", "/v3/orders/quote/partner", payload)
+func (c *Client) CreateWalletOrderQuotation(ctx context.Context, payload *QuotationRequest) (Quotation, error) {
+	req, err := c.newRequest(ctx, "POST", "/v3/orders/quote/partner", payload)
 	if err != nil {
 		return Quotation{}, err
 	}
@@ -216,8 +219,8 @@ func (c *Client) CreateWalletOrderQuotation(payload *QuotationRequest) (Quotatio
 }
 
 // GetWalletOrderFull https://docs.sendwyre.com/reference#wallet-order-full
-func (c *Client) GetWalletOrderFull(orderId string) (OrderFullDetail, error) {
-	req, err := c.newRequest("GET", fmt.Sprintf("/v3/orders/%s/full", orderId), nil)
+func (c *Client) GetWalletOrderFull(ctx context.Context, orderId string) (OrderFullDetail, error) {
+	req, err := c.newRequest(ctx, "GET", fmt.Sprintf("/v3/orders/%s/full", orderId), nil)
 	if err != nil {
 		return OrderFullDetail{}, err
 	}
@@ -227,8 +230,8 @@ func (c *Client) GetWalletOrderFull(orderId string) (OrderFullDetail, error) {
 }
 
 // GetWalletOrdersList https://docs.sendwyre.com/reference#list-orders-paged
-func (c *Client) GetWalletOrdersList() (OrdersList, error) {
-	req, err := c.newRequest("GET", "/v3/orders/list", nil)
+func (c *Client) GetWalletOrdersList(ctx context.Context) (OrdersList, error) {
+	req, err := c.newRequest(ctx, "GET", "/v3/orders/list", nil)
 	if err != nil {
 		return OrdersList{}, err
 	}
@@ -238,8 +241,8 @@ func (c *Client) GetWalletOrdersList() (OrdersList, error) {
 }
 
 // GetTrackWidgetOrder https://docs.sendwyre.com/reference#track-wallet-order
-func (c *Client) GetTrackWidgetOrder(transferId string) (TrackWidgetOrder, error) {
-	req, err := c.newRequest("GET", fmt.Sprintf("/v2/transfer/%s/track", transferId), nil)
+func (c *Client) GetTrackWidgetOrder(ctx context.Context, transferId string) (TrackWidgetOrder, error) {
+	req, err := c.newRequest(ctx, "GET", fmt.Sprintf("/v2/transfer/%s/track", transferId), nil)
 	if err != nil {
 		return TrackWidgetOrder{}, err
 	}
@@ -249,8 +252,8 @@ func (c *Client) GetTrackWidgetOrder(transferId string) (TrackWidgetOrder, error
 }
 
 // GetSupportedCountries https://docs.sendwyre.com/reference#list-orders-paged
-func (c *Client) GetSupportedCountries() (SupportedCountries, error) {
-	req, err := c.newRequest("GET", "/v3/widget/supportedCountries", nil)
+func (c *Client) GetSupportedCountries(ctx context.Context) (SupportedCountries, error) {
+	req, err := c.newRequest(ctx, "GET", "/v3/widget/supportedCountries", nil)
 	if err != nil {
 		return SupportedCountries{}, err
 	}
@@ -260,8 +263,8 @@ func (c *Client) GetSupportedCountries() (SupportedCountries, error) {
 }
 
 // GetRateLockedReservation https://docs.sendwyre.com/reference#rate-locked-reservation
-func (c *Client) GetRateLockedReservation(reservationId string) (RateLockedReservation, error) {
-	req, err := c.newRequest("GET", fmt.Sprintf("/v3/orders/reservation/%s", reservationId), nil)
+func (c *Client) GetRateLockedReservation(ctx context.Context, reservationId string) (RateLockedReservation, error) {
+	req, err := c.newRequest(ctx, "GET", fmt.Sprintf("/v3/orders/reservation/%s", reservationId), nil)
 	if err != nil {
 		return RateLockedReservation{}, err
 	}

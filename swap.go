@@ -1,6 +1,9 @@
 package gowyre
 
-import "fmt"
+import (
+	"context"
+	"fmt"
+)
 
 // CreateSwap implements the create Swap body fields from Transfer and Exchanges API https://docs.sendwyre.com/reference#create-swap
 // for POST https://api.sendwyre.com/v3/swaps request
@@ -50,8 +53,8 @@ type SwapTransfer struct {
 }
 
 // CreateSwap https://docs.sendwyre.com/reference#create-swap
-func (c *Client) CreateSwap(swap *CreateSwap) (Swap, error) {
-	req, err := c.newRequest("POST", "/v3/swaps", swap)
+func (c *Client) CreateSwap(ctx context.Context, swap *CreateSwap) (Swap, error) {
+	req, err := c.newRequest(ctx, "POST", "/v3/swaps", swap)
 	if err != nil {
 		return Swap{}, err
 	}
@@ -61,8 +64,8 @@ func (c *Client) CreateSwap(swap *CreateSwap) (Swap, error) {
 }
 
 // GetSwap https://docs.sendwyre.com/reference#get-swap
-func (c *Client) GetSwap(swapID string) (Swap, error) {
-	req, err := c.newRequest("GET", fmt.Sprintf("/v3/swaps/%s", swapID), nil)
+func (c *Client) GetSwap(ctx context.Context, swapID string) (Swap, error) {
+	req, err := c.newRequest(ctx, "GET", fmt.Sprintf("/v3/swaps/%s", swapID), nil)
 	if err != nil {
 		return Swap{}, err
 	}

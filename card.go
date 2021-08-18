@@ -1,6 +1,9 @@
 package gowyre
 
-import "fmt"
+import (
+	"context"
+	"fmt"
+)
 
 // Card implements the Card procesing body fields from Card Processing API https://docs.sendwyre.com/reference#white-label-card-processing-api
 // for POST https://api.sendwyre.com/v3/debitcard/process/partner request
@@ -89,8 +92,8 @@ type RefundResponse struct {
 }
 
 // CardProcessing https://docs.sendwyre.com/reference#white-label-card-processing-api
-func (c *Client) CardProcessing(card *Card) (ProcessResponse, error) {
-	req, err := c.newRequest("POST", "/v3/debitcard/process/partner", card)
+func (c *Client) CardProcessing(ctx context.Context, card *Card) (ProcessResponse, error) {
+	req, err := c.newRequest(ctx, "POST", "/v3/debitcard/process/partner", card)
 	if err != nil {
 		return ProcessResponse{}, err
 	}
@@ -100,8 +103,8 @@ func (c *Client) CardProcessing(card *Card) (ProcessResponse, error) {
 }
 
 // GetCardAuthorize https://docs.sendwyre.com/reference#authorize-card
-func (c *Client) GetCardAuthorize(orderId string) (Authorized, error) {
-	req, err := c.newRequest("GET", fmt.Sprintf("/v3/debitcard/authorization/%s", orderId), nil)
+func (c *Client) GetCardAuthorize(ctx context.Context, orderId string) (Authorized, error) {
+	req, err := c.newRequest(ctx, "GET", fmt.Sprintf("/v3/debitcard/authorization/%s", orderId), nil)
 	if err != nil {
 		return Authorized{}, err
 	}
@@ -111,8 +114,8 @@ func (c *Client) GetCardAuthorize(orderId string) (Authorized, error) {
 }
 
 // CardAuthorize https://docs.sendwyre.com/reference#authorize-card-sms-card2fa
-func (c *Client) CardAuthorize(card *Card) (AuthorizeResponse, error) {
-	req, err := c.newRequest("POST", "/v3/debitcard/authorize/partner", card)
+func (c *Client) CardAuthorize(ctx context.Context, card *Card) (AuthorizeResponse, error) {
+	req, err := c.newRequest(ctx, "POST", "/v3/debitcard/authorize/partner", card)
 	if err != nil {
 		return AuthorizeResponse{}, err
 	}
@@ -122,8 +125,8 @@ func (c *Client) CardAuthorize(card *Card) (AuthorizeResponse, error) {
 }
 
 // CardRefunds https://docs.sendwyre.com/reference#authorize-card-sms-card2fa
-func (c *Client) CardRefunds(orderId string) (RefundResponse, error) {
-	req, err := c.newRequest("POST", fmt.Sprintf("/v3/orders/%s/refund/partner", orderId), nil)
+func (c *Client) CardRefunds(ctx context.Context, orderId string) (RefundResponse, error) {
+	req, err := c.newRequest(ctx, "POST", fmt.Sprintf("/v3/orders/%s/refund/partner", orderId), nil)
 	if err != nil {
 		return RefundResponse{}, err
 	}

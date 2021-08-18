@@ -2,6 +2,12 @@
 
 Golang unofficial Wyre API client. Check out `https://docs.sendwyre.com/reference` for full API specification.
 
+## Installing
+
+```bash
+$ go get -u github.com/elysiumbridge/gowyre
+```
+
 ## Example
 
 ```go
