@@ -9,25 +9,27 @@ import (
 )
 
 func TestSuite(t *testing.T) {
-	suite.Run(t, new(WalletTestSuite))
+	suite.Run(t, new(GowyreTestSuite))
 }
 
-type WalletTestSuite struct {
+type GowyreTestSuite struct {
 	suite.Suite
 	secret string
 	env    string
 }
 
-func (s *WalletTestSuite) SetupSuite() {
+func (s *GowyreTestSuite) SetupSuite() {
 	s.secret = ""
 	s.env = "test"
 }
 
-func (s *WalletTestSuite) TestAccesDenied() {
+func (s *GowyreTestSuite) TestAccesDenied() {
 	c, err := gowyre.NewClient(s.secret, s.env, "", nil)
 	s.Nil(err)
 
 	_, err = c.CreateWallet(context.Background(), &gowyre.CreateWallet{Name: "user:x"})
 	s.Require().NotNil(err)
-	s.ErrorIs(err, gowyre.ErrAccessDenied)
+	s.Require().ErrorAs(err, &gowyre.Error{})
+	s.Equal(401, err.(gowyre.Error).StatusCode)
+	s.Equal("Invalid Session", err.Error())
 }

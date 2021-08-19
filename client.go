@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
-	"errors"
 	"io"
 	"net/http"
 	"net/url"
@@ -13,10 +12,6 @@ import (
 const (
 	testWyreURL = "https://api.testwyre.com"
 	sendWyreURL = "https://api.sendwyre.com"
-)
-
-var (
-	ErrAccessDenied = errors.New("AccessDeniedException")
 )
 
 type Client struct {
@@ -72,6 +67,7 @@ func (c *Client) newRequest(ctx context.Context, method, path string, body inter
 	}
 	req.Header.Set("Accept", "application/json")
 	req.Header.Set("User-Agent", c.UserAgent)
+	req.Header.Set("Authorization", "Bearer "+c.Secret)
 	return req, nil
 }
 
@@ -81,9 +77,14 @@ func (c *Client) do(req *http.Request, v interface{}) (*http.Response, error) {
 		return nil, err
 	}
 	defer resp.Body.Close()
-	if resp.StatusCode == 401 {
-		return nil, ErrAccessDenied
+	if resp.StatusCode > 400 {
+		var werr WyreError
+		if err = json.NewDecoder(resp.Body).Decode(&werr); err != nil {
+			return nil, err
+		}
+		return nil, NewError(werr)
 	}
+
 	err = json.NewDecoder(resp.Body).Decode(v)
 	return resp, err
 }
