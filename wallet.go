@@ -14,85 +14,85 @@ var (
 
 // CreateWallet body for POST https://api.sendwyre.com/v2/wallets request https://docs.sendwyre.com/reference#create-wallet
 type CreateWallet struct {
-	Name        string `json:"name"`
-	CallbackUrl string `json:"callbackUrl"`
-	Type        string `json:"type"`
-	Notes       string `json:"notes"`
+	Name        string `json:"name,omitempty"`
+	CallbackUrl string `json:"callbackUrl,omitempty"`
+	Type        string `json:"type,omitempty"`
+	Notes       string `json:"notes,omitempty"`
 }
 
 // Wallet response for POST https://api.sendwyre.com/v2/wallets request
 type Wallet struct {
-	Owner             string            `json:"owner"`
-	Status            string            `json:"status"`
-	CallbackUrl       string            `json:"callbackUrl"`
-	PusherChannel     string            `json:"pusherChannel"`
-	DepositAddresses  DepositAddresses  `json:"depositAddresses"`
-	Balances          Balances          `json:"balances"`
-	TotalBalances     TotalBalances     `json:"totalBalances"`
-	AvailableBalances AvailableBalances `json:"availableBalances"`
-	Notes             string            `json:"notes"`
-	CreatedAt         int64             `json:"createdAt"`
-	SRN               string            `json:"srn"`
-	Nam               string            `json:"name"`
-	ID                string            `json:"id"`
-	Type              string            `json:"type"`
+	Owner             string            `json:"owner,omitempty"`
+	Status            string            `json:"status,omitempty"`
+	CallbackUrl       string            `json:"callbackUrl,omitempty"`
+	PusherChannel     string            `json:"pusherChannel,omitempty"`
+	DepositAddresses  DepositAddresses  `json:"depositAddresses,omitempty"`
+	Balances          Balances          `json:"balances,omitempty"`
+	TotalBalances     TotalBalances     `json:"totalBalances,omitempty"`
+	AvailableBalances AvailableBalances `json:"availableBalances,omitempty"`
+	Notes             string            `json:"notes,omitempty"`
+	CreatedAt         int64             `json:"createdAt,omitempty"`
+	SRN               string            `json:"srn,omitempty"`
+	Name              string            `json:"name,omitempty"`
+	ID                string            `json:"id,omitempty"`
+	Type              string            `json:"type,omitempty"`
 }
 
 // DepositAddresses list of deposit addresses for supported currencies
 // part of wallet model
 type DepositAddresses struct {
-	BTC  string `json:"BTC"`
-	AVAX string `json:"AVAX"`
-	XLM  string `json:"XLM"`
-	ETH  string `json:"ETH"`
+	BTC  string `json:"BTC,omitempty"`
+	AVAX string `json:"AVAX,omitempty"`
+	XLM  string `json:"XLM,omitempty"`
+	ETH  string `json:"ETH,omitempty"`
 }
 
 // Balances list of balances for supported currencies
 // part of wallet model
 type Balances struct {
-	BTC  string `json:"BTC"`
-	AVAX string `json:"AVAX"`
-	XLM  string `json:"XLM"`
-	ETH  string `json:"ETH"`
+	BTC  string `json:"BTC,omitempty"`
+	AVAX string `json:"AVAX,omitempty"`
+	XLM  string `json:"XLM,omitempty"`
+	ETH  string `json:"ETH,omitempty"`
 }
 
 // TotalBalances list of total balances for supported currencies
 // part of wallet model
 type TotalBalances struct {
-	BTC  string `json:"BTC"`
-	AVAX string `json:"AVAX"`
-	XLM  string `json:"XLM"`
-	ETH  string `json:"ETH"`
+	BTC  string `json:"BTC,omitempty"`
+	AVAX string `json:"AVAX,omitempty"`
+	XLM  string `json:"XLM,omitempty"`
+	ETH  string `json:"ETH,omitempty"`
 }
 
 // AvailableBalances list of available balances for supported currencies
 // part of wallet model
 type AvailableBalances struct {
-	BTC  string `json:"BTC"`
-	AVAX string `json:"AVAX"`
-	XLM  string `json:"XLM"`
-	ETH  string `json:"ETH"`
+	BTC  string `json:"BTC,omitempty"`
+	AVAX string `json:"AVAX,omitempty"`
+	XLM  string `json:"XLM,omitempty"`
+	ETH  string `json:"ETH,omitempty"`
 }
 
 // CreateMulti body for POST https://api.sendwyre.com/v2/wallets/batch request https://docs.sendwyre.com/reference#create-multiple-wallets
 type CreateMulti struct {
-	Wallets []CreateWallet `json:"wallets"`
+	Wallets []CreateWallet `json:"wallets,omitempty"`
 }
 
 // UpdatePayload body for POST https://api.sendwyre.com/v2/wallet/:walletId/update request https://docs.sendwyre.com/reference#update-wallet
 type UpdatePayload struct {
-	WalletID    string `json:"walletId"`
-	Name        string `json:"name"`
-	CallbackURL string `json:"callbackUrl"`
-	Notes       string `json:"notes"`
+	WalletID    string `json:"walletId,omitempty"`
+	Name        string `json:"name,omitempty"`
+	CallbackURL string `json:"callbackUrl,omitempty"`
+	Notes       string `json:"notes,omitempty"`
 }
 
 // ListResponse body for GET https://api.sendwyre.com/v2/wallets request
 type ListResponse struct {
-	Data []Wallet `json:"data"`
+	Data []Wallet `json:"data,omitempty"`
 }
 
-// CreateWallet https://docs.sendwyre.com/reference#create-wallet
+// CreateWallet https://docs.sendwyre.com/reference/createwallet
 func (c *Client) CreateWallet(ctx context.Context, wallet *CreateWallet) (Wallet, error) {
 	if wallet.Type == "" {
 		wallet.Type = "DEFAULT"
@@ -118,10 +118,10 @@ func (c *Client) CreateMultipleWallet(ctx context.Context, wallets *CreateMulti)
 	return resp, err
 }
 
-// LookupWallet https://docs.sendwyre.com/reference#lookup-wallet
+// GetWallet https://docs.sendwyre.com/reference/getwallet
 // The method receives both a walletID and name parameters. If one is specified the
 // wallet will be retrieved accordingly. The walletID is used if both values are provided
-func (c *Client) LookupWallet(ctx context.Context, walletID, name string) (Wallet, error) {
+func (c *Client) GetWallet(ctx context.Context, walletID, name string) (Wallet, error) {
 	if walletID == "" && name == "" {
 		return Wallet{}, ErrMissingWalletID
 	}
@@ -129,17 +129,11 @@ func (c *Client) LookupWallet(ctx context.Context, walletID, name string) (Walle
 	url := "/v2/wallet"
 	if walletID != "" {
 		url = fmt.Sprintf("%s/%s", url, walletID)
-	}
-	body := &struct {
-		Name string `json:"name"`
-	}{
-		Name: name,
-	}
-	if walletID != "" {
-		body = nil
+	} else {
+		url = fmt.Sprintf("%s?name=%s", url, name)
 	}
 
-	req, err := c.newRequest(ctx, "GET", url, body)
+	req, err := c.newRequest(ctx, "GET", url, nil)
 	if err != nil {
 		return Wallet{}, err
 	}
@@ -170,9 +164,9 @@ func (c *Client) DeleteWallet(ctx context.Context, walletId string) error {
 	return err
 }
 
-// ListAllWallets https://docs.sendwyre.com/reference#list-all-wallets
-func (c *Client) ListAllWallets(ctx context.Context) (ListResponse, error) {
-	req, err := c.newRequest(ctx, "GET", "/v2/wallets", nil)
+// ListWalletsPaginated https://docs.sendwyre.com/reference#list-all-wallets
+func (c *Client) ListWalletsPaginated(ctx context.Context, limit, offset int) (ListResponse, error) {
+	req, err := c.newRequest(ctx, "GET", fmt.Sprintf("/v2/wallets?limit=%d&offset=%d", limit, offset), nil)
 	if err != nil {
 		return ListResponse{}, err
 	}
