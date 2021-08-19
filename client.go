@@ -22,13 +22,20 @@ type Client struct {
 	httpClient *http.Client
 }
 
-func NewClient(secret, env, agent string, httpClient *http.Client) (c *Client, err error) {
+type environment string
+
+var (
+	Sandbox    environment = "test"
+	Production environment = "production"
+)
+
+func NewClient(secret, agent string, env environment, httpClient *http.Client) (c *Client, err error) {
 	if httpClient == nil {
 		httpClient = http.DefaultClient
 	}
 
 	var URL *url.URL
-	if env == "test" {
+	if env == Sandbox {
 		URL, err = url.Parse(testWyreURL)
 	} else {
 		URL, err = url.Parse(sendWyreURL)
