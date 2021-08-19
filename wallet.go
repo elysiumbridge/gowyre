@@ -50,28 +50,28 @@ type DepositAddresses struct {
 // Balances list of balances for supported currencies
 // part of wallet model
 type Balances struct {
-	BTC  string `json:"BTC,omitempty"`
-	AVAX string `json:"AVAX,omitempty"`
-	XLM  string `json:"XLM,omitempty"`
-	ETH  string `json:"ETH,omitempty"`
+	BTC  float64 `json:"BTC"`
+	AVAX float64 `json:"AVAX"`
+	XLM  float64 `json:"XLM"`
+	ETH  float64 `json:"ETH"`
 }
 
 // TotalBalances list of total balances for supported currencies
 // part of wallet model
 type TotalBalances struct {
-	BTC  string `json:"BTC,omitempty"`
-	AVAX string `json:"AVAX,omitempty"`
-	XLM  string `json:"XLM,omitempty"`
-	ETH  string `json:"ETH,omitempty"`
+	BTC  float64 `json:"BTC"`
+	AVAX float64 `json:"AVAX"`
+	XLM  float64 `json:"XLM"`
+	ETH  float64 `json:"ETH"`
 }
 
 // AvailableBalances list of available balances for supported currencies
 // part of wallet model
 type AvailableBalances struct {
-	BTC  string `json:"BTC,omitempty"`
-	AVAX string `json:"AVAX,omitempty"`
-	XLM  string `json:"XLM,omitempty"`
-	ETH  string `json:"ETH,omitempty"`
+	BTC  float64 `json:"BTC"`
+	AVAX float64 `json:"AVAX"`
+	XLM  float64 `json:"XLM"`
+	ETH  float64 `json:"ETH"`
 }
 
 // CreateMulti body for POST https://api.sendwyre.com/v2/wallets/batch request https://docs.sendwyre.com/reference#create-multiple-wallets

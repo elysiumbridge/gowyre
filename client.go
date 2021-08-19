@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"fmt"
 	"io"
 	"net/http"
 	"net/url"
@@ -54,8 +55,6 @@ func NewClient(secret, agent string, env environment, httpClient *http.Client) (
 }
 
 func (c *Client) newRequest(ctx context.Context, method, path string, body interface{}) (*http.Request, error) {
-	rel := &url.URL{Path: path}
-	u := c.BaseURL.ResolveReference(rel)
 	var buf io.ReadWriter
 	if body != nil {
 		buf = new(bytes.Buffer)
@@ -64,7 +63,7 @@ func (c *Client) newRequest(ctx context.Context, method, path string, body inter
 			return nil, err
 		}
 	}
-	req, err := http.NewRequest(method, u.String(), buf)
+	req, err := http.NewRequest(method, fmt.Sprintf("%s%s", c.BaseURL.String(), path), buf)
 	if err != nil {
 		return nil, err
 	}
