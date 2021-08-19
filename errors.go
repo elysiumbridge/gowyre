@@ -67,6 +67,10 @@ func NewUnknownException(err WyreError) Error {
 	return Error{err, 500, "A problem with our services internally. This should rarely happen"}
 }
 
+func NewApiException(err WyreError) Error {
+	return Error{err, 500, "A problem with our services internally. This should rarely happen"}
+}
+
 func NewError(err WyreError) Error {
 	return map[string]Error{
 		"ValidationException":        NewValidationException(err),
@@ -80,5 +84,6 @@ func NewError(err WyreError) Error {
 		"AccountLockedException":     NewAccountLockedException(err),
 		"LockoutException":           NewLockoutException(err),
 		"UnknownException":           NewUnknownException(err),
+		"ApiException":               NewApiException(err),
 	}[err.Type]
 }
