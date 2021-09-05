@@ -8,6 +8,7 @@ import (
 // CreateTransfer implements the create Transfer body fields from Transfer and Exchanges API https://docs.sendwyre.com/reference#create-transfer
 // for POST https://api.sendwyre.com/v3/transfers request
 type CreateTransfer struct {
+	CustomId       string  `json:"customId"`
 	Source         string  `json:"source"`
 	SourceCurrency string  `json:"sourceCurrency"`
 	SourceAmount   float64 `json:"sourceAmount"`
