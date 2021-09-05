@@ -6,18 +6,24 @@ import (
 	"fmt"
 )
 
+type Rate string
+
 const (
-	DefaultRate = "DIVISOR"
+	Divisor    Rate = "DIVISOR"
+	Multiplier Rate = "MULTIPLIER"
+	Priced     Rate = "PRICED"
+
+	DefaultRate = Divisor
 )
 
 var ErrUnsupportedRate = errors.New("the provided exchange rate type is not supported")
 
 // GetExchangeRates https://docs.sendwyre.com/reference#live-exchange-rates
-func (c *Client) GetExchangeRates(ctx context.Context, as string) (interface{}, error) {
+func (c *Client) GetExchangeRates(ctx context.Context, as Rate) (interface{}, error) {
 	if as == "" {
 		as = DefaultRate
 	}
-	if as != "DIVISOR" && as != "MULTIPLIER" && as != "PRICED" {
+	if as != Divisor && as != Multiplier && as != Priced {
 		return nil, ErrUnsupportedRate
 	}
 
