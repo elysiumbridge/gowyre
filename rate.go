@@ -19,7 +19,7 @@ const (
 var ErrUnsupportedRate = errors.New("the provided exchange rate type is not supported")
 
 // GetExchangeRates https://docs.sendwyre.com/reference#live-exchange-rates
-func (c *Client) GetExchangeRates(ctx context.Context, as Rate) (interface{}, error) {
+func (c *Client) GetExchangeRates(ctx context.Context, as Rate) (map[string]float64, error) {
 	if as == "" {
 		as = DefaultRate
 	}
@@ -31,7 +31,7 @@ func (c *Client) GetExchangeRates(ctx context.Context, as Rate) (interface{}, er
 	if err != nil {
 		return nil, err
 	}
-	var resp interface{}
+	var resp map[string]float64
 	_, err = c.do(req, &resp)
 	return resp, err
 }
