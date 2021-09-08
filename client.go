@@ -83,7 +83,7 @@ func (c *Client) do(req *http.Request, v interface{}) (*http.Response, error) {
 		return nil, err
 	}
 	defer resp.Body.Close()
-	if resp.StatusCode > 400 {
+	if resp.StatusCode >= 400 {
 		var werr WyreError
 		if err = json.NewDecoder(resp.Body).Decode(&werr); err != nil {
 			return nil, err

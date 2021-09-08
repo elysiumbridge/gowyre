@@ -123,7 +123,7 @@ func (c *Client) GetTransfer(ctx context.Context, transferID string) (Transfer, 
 
 // GetTransferByCustomID https://docs.sendwyre.com/reference#get-transfer-by-custom-id
 func (c *Client) GetTransferByCustomID(ctx context.Context, customID string) (Transfer, error) {
-	req, err := c.newRequest(ctx, "GET", fmt.Sprintf("/v2/transfers?customId=%s", customID), nil)
+	req, err := c.newRequest(ctx, "GET", fmt.Sprintf("/v2/transfer?customId=%s", customID), nil)
 	if err != nil {
 		return Transfer{}, err
 	}
