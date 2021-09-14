@@ -12,8 +12,8 @@ type CreateTransfer struct {
 	Source         string  `json:"source"`
 	SourceCurrency string  `json:"sourceCurrency"`
 	SourceAmount   float64 `json:"sourceAmount"`
-	Dest           string  `json:"dest"`
 	DestCurrency   string  `json:"destCurrency"`
+	Dest           string  `json:"dest"`
 	Message        string  `json:"message"`
 	AutoConfirm    bool    `json:"autoConfirm"`
 }

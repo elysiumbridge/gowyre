@@ -31,6 +31,10 @@ func NewJsonFormatException(err WyreError) Error {
 	return Error{err, 400, "Unable to process JSON."}
 }
 
+func NewInvalidValueException(err WyreError) Error {
+	return Error{err, 400, err.Error()}
+}
+
 func NewInsufficientFundsException(err WyreError) Error {
 	return Error{err, 400, "You requested the use of more funds in the specified currency than were available"}
 }
@@ -79,6 +83,7 @@ func NewError(err WyreError) Error {
 	return map[string]Error{
 		"ValidationException":        NewValidationException(err),
 		"JsonFormatException":        NewJsonFormatException(err),
+		"InvalidValueException":      NewInvalidValueException(err),
 		"InsufficientFundsException": NewInsufficientFundsException(err),
 		"AccessDeniedException":      NewAccessDeniedException(err),
 		"TransferException":          NewTransferException(err),
