@@ -35,6 +35,10 @@ func NewInvalidValueException(err WyreError) Error {
 	return Error{err, 400, err.Error()}
 }
 
+func NewUserFacingException(err WyreError) Error {
+	return Error{err, 400, err.Error()}
+}
+
 func NewInsufficientFundsException(err WyreError) Error {
 	return Error{err, 400, "You requested the use of more funds in the specified currency than were available"}
 }
@@ -80,10 +84,11 @@ func NewApiException(err WyreError) Error {
 }
 
 func NewError(err WyreError) Error {
-	return map[string]Error{
+	e := map[string]Error{
 		"ValidationException":        NewValidationException(err),
 		"JsonFormatException":        NewJsonFormatException(err),
 		"InvalidValueException":      NewInvalidValueException(err),
+		"UserFacingException":        NewUserFacingException(err),
 		"InsufficientFundsException": NewInsufficientFundsException(err),
 		"AccessDeniedException":      NewAccessDeniedException(err),
 		"TransferException":          NewTransferException(err),
@@ -96,4 +101,17 @@ func NewError(err WyreError) Error {
 		"UnknownException":           NewUnknownException(err),
 		"ApiException":               NewApiException(err),
 	}[err.Type]
+
+	if e.StatusCode == 0 {
+		return Error{
+			WyreError: WyreError{
+				ExceptionId: err.ExceptionId,
+				Type:        err.Type,
+			},
+			StatusCode: 500,
+			Details:    err.Error(),
+		}
+	}
+
+	return e
 }
