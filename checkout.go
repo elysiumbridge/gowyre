@@ -8,14 +8,29 @@ import (
 // Checkout implements the Checkout procesing body fields from Wyre Checkout API https://docs.sendwyre.com/reference#wyre-checkout
 // for POST https://api.sendwyre.com/v3/orders/reserve request
 type Checkout struct {
-	PaymentMethod      string   `json:"paymentMethod"`
-	Amount             string   `json:"amount"`
-	SourceCurrency     string   `json:"sourceCurrency"`
-	RedirectUrl        string   `json:"redirectUrl"`
-	FailureRedirectUrl string   `json:"failureRedirectUrl"`
-	ReferrerAccountId  string   `json:"referrerAccountId"`
-	Country            string   `json:"country"`
-	LockFields         []string `json:"lockFields"`
+	Amount             string   `json:"amount,omitempty"`
+	SourceCurrency     string   `json:"sourceCurrency,omitempty"`
+	DestCurrency       string   `json:"destCurrency,omitempty"`
+	Dest               string   `json:"dest,omitempty"`
+	FirstName          string   `json:"firstName,omitempty"`
+	LastName           string   `json:"lastName,omitempty"`
+	Phone              string   `json:"phone,omitempty"`
+	Email              string   `json:"email,omitempty"`
+	Country            string   `json:"country,omitempty"`
+	PostalCode         string   `json:"postalCode,omitempty"`
+	State              string   `json:"state,omitempty"`
+	City               string   `json:"city,omitempty"`
+	Street1            string   `json:"street1,omitempty"`
+	LockFields         []string `json:"lockFields,omitempty"`
+	RedirectUrl        string   `json:"redirectUrl,omitempty"`
+	FailureRedirectUrl string   `json:"failureRedirectUrl,omitempty"`
+	PaymentMethod      string   `json:"paymentMethod,omitempty"`
+	ReferrerAccountId  string   `json:"referrerAccountId,omitempty"`
+	ReferenceID        string   `json:"referenceId,omitempty"`
+	HideTrackBtn       bool     `json:"hideTrackBtn,omitempty"`
+	SourceAmount       string   `json:"sourceAmount,omitempty"`
+	DestAmount         string   `json:"destAmount,omitempty"`
+	AmountIncludeFees  bool     `json:"amountIncludeFees,omitempty"`
 }
 
 // ReservationResponse returns response to reservation request
